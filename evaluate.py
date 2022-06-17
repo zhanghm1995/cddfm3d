@@ -188,5 +188,5 @@ class Test:
 
 if __name__ == "__main__":
     model = Test()
-    #model.test()
-    model.test_shape()
+    model.test()
+    # model.test_shape()

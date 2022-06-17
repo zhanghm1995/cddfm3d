@@ -19,7 +19,7 @@ def random_num_with_fix_total(maxValue, num):
     e.g. random_num_with_fix_total(18, 5) will generate five non-zero values whose sum is 18
     params:
         maxvalue: the sum value, int
-        num：the account, int
+        num: the account, int
     return:
         b: a list that has 'num' numbers without 0 and the sum is 'maxValue'
     """
