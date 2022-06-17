@@ -9,6 +9,9 @@ from loss.wpdc_loss import WPDCLoss
 #from loss.landmark_loss import WingLoss, LandmarkLoss
 from utils.lr_scheduler import WarmupMultiStepLR
 from bfm.bfm import BFM
+from torch.utils.tensorboard import SummaryWriter
+import os.path as osp
+
 
 class APModel(BaseModel):
     def __init__(self, opt, is_train):
@@ -39,6 +42,10 @@ class APModel(BaseModel):
         # init train variables
         if self._is_train:
             self._init_train_vars()
+        
+        ## Init the tensorboard logging
+        checkpoint_dir = osp.join(self._root_dir, self._opt.name)
+        self.tb_writer = SummaryWriter(osp.join(checkpoint_dir, "log_dir"))
 
         # init BFM basis
         # self.facemodel = BFM("bfm/BFM/mSEmTFK68etc.chj")
@@ -113,9 +120,12 @@ class APModel(BaseModel):
             #self._SML1_loss = self._SML1_loss.cuda()
             #self._RENDER_loss = self._RENDER_loss.cuda()
 
-    def optimize_parameters(self, train_batch, epoch):
+    def optimize_parameters(self, train_batch, epoch, global_step=None):
         if self._is_train:
             loss = self.forward(train_batch, epoch)
+
+            self.tb_writer.add_scalar("traing_loss", loss, global_step)
+
             self._optimizer.zero_grad()
             loss.backward()
             self._optimizer.step()

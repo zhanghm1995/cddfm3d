@@ -13,6 +13,8 @@ class Train:
 
         self._model = ModelsFactory.get_by_name(self._opt.model, self._opt, is_train=True)
 
+        self.global_step = 0
+
         self._train()
 
     def _train(self):
@@ -31,8 +33,8 @@ class Train:
     def _train_epoch(self, i_epoch):
 
         for i_train_batch, train_batch in enumerate(self._dataset_train):
-            
-            self._model.optimize_parameters(train_batch, i_epoch)
+            self.global_step += 1
+            self._model.optimize_parameters(train_batch, i_epoch, global_step=self.global_step)
 
             if i_train_batch % self._opt.show_interval == 0:
                 self._display_terminal_train(i_epoch, i_train_batch)
