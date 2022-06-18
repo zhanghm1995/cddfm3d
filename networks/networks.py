@@ -27,10 +27,7 @@ class APNet(NetworkBase):
                 nn.init.xavier_uniform_(m.weight)
             
     def forward(self, inp):
-        #print ("((((((((")
-        #print (inp)
         x = self.fcs(inp)
-        #print (")))))))")
         return x
 
 

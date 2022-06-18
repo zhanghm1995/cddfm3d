@@ -118,7 +118,7 @@ class Test:
         io.imsave(img_name, images)
 
 
-    def test(self):
+    def test(self, save_obj=False, save_gt_rendering=True):
         save_dir = os.path.join(self._save_dir, self._save_name)
         os.makedirs(save_dir, exist_ok=True)
         for i_test_batch, test_batch in enumerate(tqdm(self._dataset_test)):
@@ -126,7 +126,6 @@ class Test:
 
             latent = test_batch['latent'].cuda()
             params_pred = self._model.forward_test(latent) 
-            #print (params_pred) 
 
             assert len(test_batch['sample_id']) == 1  # assert batch-size=1 in test phase
             sample_id = test_batch['sample_id'][0] # image name
@@ -138,11 +137,14 @@ class Test:
             tar_img_path = os.path.join(save_dir, sample_id + ".png")
             shutil.copy(src_img_path, tar_img_path)
 
-            #self.save_renderimg(params, save_render_path + "gt_")
-            #self.save_obj(params, save_obj_path + "gt_")
+            if save_gt_rendering:
+                self.save_renderimg(params, save_render_path + "gt_")
+                if save_obj:
+                    self.save_obj(params, save_obj_path + "gt_")
 
             self.save_renderimg(params_pred, save_render_path + "pred_")
-            #self.save_obj(params_pred, save_obj_path + "pred_")
+            if save_obj:
+                self.save_obj(params_pred, save_obj_path + "pred_")
 
     def test_shape(self):
         save_dir = os.path.join(self._save_dir, self._save_name)
