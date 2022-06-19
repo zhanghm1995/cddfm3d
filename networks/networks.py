@@ -124,6 +124,7 @@ class RigNetDecoder(NetworkBase):
             out = self._nets[ind](out)  # batch, 512, 256, 128, 64, 32
             outs.append(out)
         outs = torch.cat(outs, dim=1)# batch, 9088
+        
         new_latent = latent.clone()
         new_latent[:, :512] = latent[:, :512] + outs[:, :512]
         new_latent[:, 1024:2048] = latent[:, 1024:2048] + outs[:, 512:1536]

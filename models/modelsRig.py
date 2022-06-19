@@ -107,7 +107,7 @@ class RIGModel(BaseModel):
             self._SHAPE_loss = self._SHAPE_loss.cuda()
 
 
-    def optimize_parameters(self, train_batch, epoch):
+    def optimize_parameters(self, train_batch, epoch, global_step=None):
         if self._is_train:
             loss = self.forward(train_batch, epoch)
             self._optimizer.zero_grad()
@@ -150,8 +150,9 @@ class RIGModel(BaseModel):
 
         # Cycle-Consistent Per-Pixel Editing 
         SP = N // 2
-        w_ce = latent[: SP] # (Batch-size/2, ...)
+
         v_ce = latent[SP:] # (Btach-size/2, ...)
+        w_ce = latent[: SP] # (Batch-size/2, ...)
 
         Pv_ce = self.APNet(v_ce.view(SP, -1))
 
@@ -231,7 +232,7 @@ class RIGModel(BaseModel):
             if self._model_name == 'RIGModelS':     
                 What = self.RigNetDecoder.forwardShape(I, Pv, latent_w, Pw)
             elif self._model_name == 'RIGModelE':     
-                What = self.RigNetDecoder.forwardExpression(I, Pv, latent, Pv)
+                What = self.RigNetDecoder.forwardExpression(I, Pv, latent_w, Pv)
             elif self._model_name == 'RIGModelP':     
                 What = self.RigNetDecoder.forwardPose(I, Pv, latent, Pv)
             elif self._model_name == 'RIGModelL':     
