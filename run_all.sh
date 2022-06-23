@@ -19,7 +19,8 @@ train_lantent_manipulation_net() {
     echo "Training latent manipulation net..."
     python train.py --name shape --model RIGModelS \
                     --train_render --train_landmark \
-                    --train_rec --train_edge --load_apnet_epoch 80
+                    --train_rec --train_edge \
+                    --apnet_name pretrained_2W --load_apnet_epoch 80
 }
 
-estimate_3DMM
+train_lantent_manipulation_net
